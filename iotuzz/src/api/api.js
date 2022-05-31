@@ -22,3 +22,11 @@ export const getMenu = (param) => {
     data: param,
   });
 };
+
+export const getSolidWareList = (params) => {
+  return axios.request({
+    url: '/solidWare/getSolidWare',
+    method:'get',
+    params
+  })
+}

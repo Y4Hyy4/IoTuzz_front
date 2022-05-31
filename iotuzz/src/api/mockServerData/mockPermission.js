@@ -28,14 +28,14 @@ export default {
                                     name: "fuzzMonitor",
                                     label: "监控窗口",
                                     icon: "el-icon-cpu",
-                                    url: "FuzzManage/components/FuzzMonitor.vue"
+                                    url: "FuzzManage/FuzzMonitor.vue"
                                 },
                                 {
                                     path: "/FuzzManage/SolidWareUpload",
                                     name: "solidWareUpload",
                                     label: "固件上传",
                                     icon: "el-icon-document-add",
-                                    url: "FuzzManage/components/SolidWareUpload.vue"
+                                    url: "FuzzManage/SolidWareUpload.vue"
                                 },
                             ],
                         },
@@ -88,14 +88,14 @@ export default {
                                     name: "fuzzMonitor",
                                     label: "监控窗口",
                                     icon: "el-icon-cpu",
-                                    url: "FuzzManage/components/FuzzMonitor.vue"
+                                    url: "FuzzManage/FuzzMonitor.vue"
                                 },
                                 {
                                     path: "/FuzzManage/SolidWareUpload",
                                     name: "solidWareUpload",
                                     label: "固件上传",
                                     icon: "el-icon-document-add",
-                                    url: "FuzzManage/components/SolidWareUpload.vue"
+                                    url: "FuzzManage/SolidWareUpload.vue"
                                 },
                             ],
                         },
