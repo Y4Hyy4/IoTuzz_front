@@ -43,8 +43,8 @@ export default {
       isShow: false,
       operateFormLabel: [
         {
-          model: "projectName",
-          label: "项目名",
+          model: "firmwareName",
+          label: "固件名",
           type: "input",
         },
         {
@@ -53,14 +53,33 @@ export default {
           type: "input",
         },
         {
-          model: "email",
-          label: "邮箱",
-          type: "input",
+          model: "testType",
+          label: "测试方法",
+          type: "select",
+          opts:[
+            {
+              label: 'fuzzware',
+              value: 0,
+            },
+            {
+              label: 'sEmu',
+              value: 1,
+            },
+            {
+              label: 'μEmu',
+              value: 2,
+            },
+            {
+              label: 'p²im',
+              value: 3,
+            },
+          ]
         },
       ],
       operateForm: {
+        firmwareName:'',
         name: '',
-        email: '',
+        testType: '',
       },
       searchLabel: [
         {
@@ -75,16 +94,16 @@ export default {
       tableData: [],
       tableLabel: [
         {
-          prop: 'projectName',
-          label: '项目名',
+          prop: 'firmwareName',
+          label: '固件名',
         },
         {
           prop: 'name',
           label: '负责人名',
         },
         {
-          prop: 'email',
-          label: '邮箱',
+          prop: 'typeLabel',
+          label: '测试方法',
           width: 200,
         },
       ],
@@ -114,9 +133,9 @@ export default {
       this.isShow = true
       this.operateType = 'add'
       this.operateForm = {
-        'projectName': '',
+        firmwareName: '',
         name: '',
-        email: '',
+        testType: '',
       }
     },
     getList(name = '') {
@@ -129,7 +148,25 @@ export default {
       }).then((res) => {
         res = res.data
         console.log(res)
-        this.tableData = res.list
+        this.tableData = res.list.map(item => {
+          switch (item.testType) {
+            case 0:
+              item.typeLabel = 'fuzzware'
+              break
+            case 1:
+              item.typeLabel = 'sEmu'
+              break
+            case 2:
+              item.typeLabel = 'μEmu'
+              break
+            case 3:
+              item.typeLabel = 'p²im'
+              break
+            default:
+              break;
+          }
+          return item
+        })
         this.config.total = res.count
         this.config.loading = true
       })

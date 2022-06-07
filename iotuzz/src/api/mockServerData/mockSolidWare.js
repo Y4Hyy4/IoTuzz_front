@@ -23,9 +23,9 @@ for (let i = 0; i < count; i++) {
     List.push(
         Mock.mock({
             id: Mock.Random.guid(),
-            projectName: Mock.Random.string('lower', 7),
+            firmwareName: Mock.Random.string('lower', 7),
             name: Mock.Random.cname(),
-            email: Mock.Random.email(),
+            testType: Mock.Random.integer(0, 1, 2, 3),
         })
     );
 }
