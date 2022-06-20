@@ -1,253 +1,212 @@
 <template>
-  <el-row class="home" :gutter="20">
-    <el-col :span="8" style="margin-top: 20px">
-      <el-card shadow="hover">
-        <div class="user">
-          <img :src="userIcon">
-          <div class="userinfo">
-            <p class="name">Admin</p>
-            <p class="access">超管</p>
+  <div class="homepage">
+    <el-carousel :interval="4000" type="card" height="500px">
+      <el-carousel-item v-for="item in carouselData" :key="item">
+        <el-card class="card-carousel" shadow="hover">
+          <div slot="header" class="ccl-header">
+            <span>{{ item.cardHeader }}</span>
           </div>
-        </div>
-        <div class="login-info">
-          <p>上次登录时间：<span>2022-04-28</span></p>
-          <p>上次登录地点：<span>湖北武汉</span></p>
-        </div>
-      </el-card>
-      <el-card style="margin-top: 20px; height: 460px">
-        <el-table :data="tableData">
-          <el-table-column v-for="(val, key) in tableLabel" :key="key" :label="val" :prop="key"></el-table-column>
-        </el-table>
-      </el-card>
-    </el-col>
-    <el-col :span="16" style="margin-top: 20px">
-      <div class="num">
-        <el-card v-for="item in countData" :key="item.name" :body-style="{ display: 'flex', padding: 0 }">
-          <i class="icon" :class="`el-icon-${item.icon}`" :style="{ backgroundColor: item.color }"></i>
-          <div class="detail">
-            <p class="num">￥{{ item.value }}</p>
-            <p class="txt">{{ item.name }}</p>
+          <div class="ccl-body">
+            <img :src="item.imgUrl" alt="" />
           </div>
         </el-card>
-      </div>
-      <el-card style="height: 280px">
-        <!-- <div style="height: 280px;" ref="echarts"></div> -->
-        <ECharts :chartData="echartData.order" style="height: 240px;"></ECharts>
-      </el-card>
-      <div class="graph">
-        <el-card style="height: 260px">
-          <ECharts :chartData="echartData.user" style="height: 240px;"></ECharts>
+      </el-carousel-item>
+    </el-carousel>
+    <el-row :gutter="12">
+      <el-col :span="8">
+        <el-card class="card-intro" shadow="hover" style="height: 480px;">
+          <div slot="header" class="cc-header">
+            <span style="color: #f18b6d;">公告栏</span>
+          </div>
+          <div class="cc-body">
+            <div class="broad">
+              <p> 2022年5月4日</p>
+              <p> 此次测试为核心内容测试 </p>
+              <p>
+                在计算中，固件是一类特定的计算机软件，为设备的特定硬件提供低级控制。固件，例如个人计算机的BIOS，可以包含设备的基本功能，并且可以向更高级别的软件（例如操作系统）提供硬件抽象服务。对于不太复杂的设备，固件可以作为设备的完整操作系统，执行所有控制、监控和数据操作功能。包含固件的设备的典型示例包括嵌入式系统（运行嵌入式软件）、家用和个人用品、计算机和计算机外围设备。
+                固件保存在非易失性存储器设备中，如ROM、EPROM、EEPROM和闪存。更新固件要求物理更换ROM集成电路，或通过特殊程序重新编程EPROM或闪存。[1]
+                某些固件内存设备是永久安装的，制造后无法更改。更新固件的常见原因包括修复错误或向设备添加功能。</p>
+            </div>
+          </div>
         </el-card>
-        <el-card style="height: 260px">
-          <ECharts :chartData="echartData.video" :isAxisChart="false" style="height: 240px;"></ECharts>
+      </el-col>
+      <el-col :span="8">
+        <el-card class="card-intro" shadow="hover" style="height: 480px;">
+          <div slot="header" class="cc-header">
+            <span style="color: #f1d204;">快速使用</span>
+          </div>
+          <div class="cc-body">
+            <div class="start">
+              <li>准备希望测试的固件(.elf)</li>
+              <li>点击固件测试模块中固件上传</li>
+              <li>新建固件</li>
+              <li>配置信息</li>
+              <li>开始测试</li>
+              <li>等待测试结果</li>
+            </div>
+          </div>
         </el-card>
-      </div>
-    </el-col>
-  </el-row>
+      </el-col>
+      <el-col :span="8">
+        <el-card class="card-intro" shadow="hover" style="height: 480px;">
+          <div slot="header" class="cc-header">
+            <span style="color: #6a4d8a;">安全内参</span>
+          </div>
+          <div class="cc-body">
+            <div class="reference">
+              <a href="https://zhuanlan.zhihu.com/p/37715216" target="_blank">内存映射IO (MMIO) 简介</a>
+            </div>
+            <div class="reference">
+              <a href="https://zhuanlan.zhihu.com/p/56332152" target="_blank">符号执行技术总结</a>
+            </div>
+            <div class="reference">
+              <a href="https://github.com/fuzzware-fuzzer/fuzzware" target="_blank">fuzzware</a>
+            </div>
+            <div class="reference">
+              <a href="https://github.com/RiS3-Lab/p2im" target="_blank">p²im</a>
+            </div>
+            <div class="reference">
+              <a href="https://github.com/MCUSec/uEmu" target="_blank">uEmu</a>
+            </div>
+            <div class="reference">
+              <a href="https://zhuanlan.zhihu.com/p/43432370" target="_blank">模糊测试fuzzing技术总结</a>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+
 </template>
+
 <script>
-import { getData } from "../../api/api.js"
-import ECharts from "@/components/ECharts.vue"
 export default {
   name: 'HomePage',
-  components: {
-    ECharts
-  },
   data() {
     return {
-      userIcon: require('../../assets/logo.png'),
-      tableData: [],
-      tableLabel: {
-        name: '课程',
-        todayBuy: '今日购买',
-        monthBuy: '本月购买',
-        totalBuy: '总购买',
-      },
-      countData: [
+      carouselData: [
         {
-          name: "今日支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
+          cardHeader: "多模型选择",
+          imgUrl: require("@/assets/hpage-list.png"),
         },
         {
-          name: "今日收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
+          cardHeader: "可视化界面",
+          imgUrl: require("@/assets/hpage-graph.png"),
         },
         {
-          name: "今日未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
+          cardHeader: "高效可靠",
+          imgUrl: require("@/assets/hpage-eff.png"),
         },
-        {
-          name: "本月支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "本月收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "本月未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
-      ],
-      echartData: {
-        order: {
-          xData: [],
-          series: [],
-        },
-        user: {
-          xData: [],
-          series: [],
-        },
-        video: {
-          series: [],
-        },
-      }
+      ]
     }
-  },
-  mounted() {
-    getData().then(res => {
-      console.log(res)
-      const { code, data } = res.data
-      if (code === 20000) {
-        this.tableData = data.tableData
-        const keyArray = Object.keys(data.orderData.data[0])
-        const series = []
-        keyArray.forEach(key => {
-          series.push({
-            name: key,
-            data: data.orderData.data.map(item => item[key]),
-            type: 'line'
-          })
-        })
-        // const xData = orderData.date
-        this.echartData.order.xData = data.orderData.date
-        this.echartData.order.series = series
-        // const option = {
-        //   xAxis: {
-        //     data: xData
-        //   },
-        //   yAxis: {},
-        //   legend: {
-        //     data: keyArray
-        //   },
-        //   series
-        // }
-        // const E = echarts.init(this.$refs.echarts)
-        // E.setOption(option)
-        //==========================================================================
-        this.echartData.user.xData = data.userData.map(item => item.date)
-        this.echartData.user.series = [
-          {
-            name: '新增用户',
-            data: data.userData.map(item => item.new),
-            type: 'bar'
-          },
-          {
-            name: '活跃用户',
-            data: data.userData.map(item => item.active),
-            type: 'bar'
-            // bar 表示柱状图
-          }
-        ]
-        // // 柱状图
-        // const userOption = {
-        //   legend: {
-        //     // 图例文字颜色
-        //     textStyle: {
-        //       color: "#333",
-        //     },
-        //   },
-        //   grid: {
-        //     left: "20%",
-        //   },
-        //   // 提示框
-        //   tooltip: {
-        //     trigger: "axis",
-        //   },
-        //   xAxis: {
-        //     type: "category", // 类目轴
-        //     data: data.userData.map(item => item.date),
-        //     axisLine: {
-        //       lineStyle: {
-        //         color: "#17b3a3",
-        //       },
-        //     },
-        //     axisLabel: {
-        //       interval: 0,
-        //       color: "#333",
-        //     },
-        //   },
-        //   yAxis: [
-        //     {
-        //       type: "value",
-        //       axisLine: {
-        //         lineStyle: {
-        //           color: "#17b3a3",
-        //         },
-        //       },
-        //     },
-        //   ],
-        //   color: ["#2ec7c9", "#b6a2de"],
-        //   series: [
-        //     {
-        //       name: '新增用户',
-        //       data: data.userData.map(item => item.new),
-        //       type: 'bar'
-        //     },
-        //     {
-        //       name: '活跃用户',
-        //       data: data.userData.map(item => item.active),
-        //       type: 'bar'
-        //       // bar 表示柱状图
-        //     }
-        //   ],
-        // }
-        // const U = echarts.init(this.$refs.userEcharts)
-        // U.setOption(userOption)
-
-        this.echartData.video.series = [
-          {
-            data: data.videoData,
-            type: 'pie'
-          }
-        ]
-        // // 饼图
-        // const videoOption = {
-        //   tooltip: {
-        //     trigger: "item",
-        //   },
-        //   color: [
-        //     "#0f78f4",
-        //     "#dd536b",
-        //     "#9462e5",
-        //     "#a6a6a6",
-        //     "#e1bb22",
-        //     "#39c362",
-        //     "#3ed1cf",
-        //   ],
-        //   series: [
-        //     {
-        //       data: data.videoData,
-        //       type: 'pie'
-        //     }
-        //   ],
-        // }
-        // const V = echarts.init(this.$refs.videoEcharts)
-        // V.setOption(videoOption)
-      }
-    })
   }
 }
 </script>
+
+<style lang="less" scoped>
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
+}
+
+.el-card ::v-deep .el-card__body {
+  background-color: #fff;
+}
+
+.el-card ::v-deep .el-card__header {
+  background-color: #f5f6f7;
+}
+
+.card-carousel {
+  height: 100%;
+  text-align: center;
+  font-family: Fira Code, '苹方', Courier, monospace;
+
+  .ccl-header {
+    font-size: 30px;
+  }
+
+  img {
+    width: 50%;
+    height: 50%;
+  }
+}
+
+.card-intro {
+  height: 100%;
+  text-align: center;
+  font-family: Fira Code, '苹方', Courier, monospace;
+
+  .cc-header {
+    font-size: 30px;
+  }
+
+  .cc-body {
+    font-size: 30px;
+
+    .broad {
+      padding: 20px;
+
+      p {
+        text-indent: 2em;
+        line-height: 1.5em;
+        font-size: 16px;
+        text-align: left;
+      }
+    }
+
+    .start {
+      padding: 20px;
+
+      li {
+        text-indent: 2em;
+        line-height: 2em;
+        font-size: 24px;
+        text-align: left;
+      }
+    }
+
+    .reference {
+      padding: 5px;
+      a {
+        line-height: 2em;
+        font-size: 24px;
+        text-align: left;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+
+        &:after {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 0;
+          bottom: 0;
+          height: 2px;
+          margin: -5px 0;
+          right: 0;
+          background-color: #000;
+          transition: all 0.4s ease-in 0s;
+        }
+
+        &:hover:after {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+</style>
+

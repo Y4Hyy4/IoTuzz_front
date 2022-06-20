@@ -1,30 +1,30 @@
 <template>
   <div id="data-view">
-    <dv-border-box-1 class="main-container">
+    <dv-border-box-8 class="main-container">
       <div class="right-main-container">
         <div class="rmc-top-container">
-          <dv-border-box-3 class="rmctc-left-container">
+          <dv-border-box-9 class="rmctc-left-container">
 
             <Center-Cmp />
 
-          </dv-border-box-3>
+          </dv-border-box-9>
 
           <div class="rmctc-right-container">
-            <dv-border-box-3 class="rmctc-chart-1">
+            <dv-border-box-9 class="rmctc-chart-1">
 
               <Right-Chart-1 />
 
-            </dv-border-box-3>
+            </dv-border-box-9>
 
-            <dv-border-box-4 class="rmctc-chart-2" :reverse="true">
+            <dv-border-box-9 class="rmctc-chart-2" :reverse="true">
 
               <Right-Chart-2 />
 
-            </dv-border-box-4>
+            </dv-border-box-9>
           </div>
         </div>
       </div>
-    </dv-border-box-1>
+    </dv-border-box-8>
   </div>
 </template>
 

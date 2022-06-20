@@ -1,3 +1,4 @@
+// 引入mock.js
 import Mock from "mockjs";
 
 // get请求从config.url获取参数，post从config.body中获取参数
@@ -16,6 +17,7 @@ function param2Obj(url) {
     );
 }
 
+// 存放之后mock的数据
 let List = [];
 const count = 200;
 
@@ -23,9 +25,9 @@ for (let i = 0; i < count; i++) {
     List.push(
         Mock.mock({
             id: Mock.Random.guid(),
-            firmwareName: Mock.Random.string('lower', 7),
+            'firmwareName|1': ['FT800', 'HIT16K33 LED', 'BBC micro:bit display', 'BBC micro:bit pong game', 'LP5562: 4-Channel RGB', 'Sample_mailbox_app', 'I2S Echo Sample','Controller Area Network','DMIC SAMPLE','LP5562: 4-Channel RGB','UART_DRIVER','Maxim DS3231 TCXO RTC Sample Application','Digital_to_Analog_Converter_(DAC)', 'I2C Fujitsu FRAM', 'Kukui general features', 'adt7420', 'FXOS8700', 'NXP MCUX Analog Comparator (ACMP)' ],
             name: Mock.Random.cname(),
-            testType: Mock.Random.integer(0, 1, 2, 3),
+            testType: Mock.Random.integer(0, 3),
         })
     );
 }
@@ -33,17 +35,17 @@ for (let i = 0; i < count; i++) {
 export default {
     /**
      * 获取列表
-     * 要带参数 projectName, page, limit; projectName可以不填, page,limit有默认值。
-     * @param projectName, page, limit
+     * 要带参数 firmwareName, page, limit; projectName可以不填, page,limit有默认值。
+     * @param firmwareName, page, limit
      * @return {{code: number, count: number, data: *[]}}
      */
     getSolidWareList: (config) => {
-        const { projectName, page = 1, limit = 20 } = param2Obj(config.url);
-        console.log("projectName:" + projectName, "page:" + page, "分页大小limit:" + limit);
+        const { firmwareName, page = 1, limit = 20 } = param2Obj(config.url);
+        console.log("firmwareName:" + firmwareName, "page:" + page, "分页大小limit:" + limit);
         const mockList = List.filter((solidWare) => {
             if (
-              projectName &&
-                solidWare.projectName.indexOf(projectName) === -1
+              firmwareName &&
+                solidWare.firmwareName.indexOf(firmwareName) === -1
             )
                 return false;
             return true;
@@ -59,17 +61,17 @@ export default {
     },
     /**
      * 添加固件
-     * @param name, addr, email, type
+     * @param 
      * @return {{code: number, data: {message: string}}}
      */
     addSolidWare: (config) => {
-        const { projectName, name, email} = JSON.parse(config.body);
+        const { firmwareName, name, testType} = JSON.parse(config.body);
         console.log(JSON.parse(config.body));
         List.unshift({
             id: Mock.Random.guid(),
-            projectName: projectName,
+            firmwareName: firmwareName,
             name: name,
-            email: email,
+            testType: testType,
         });
         return {
             code: 20000,
@@ -116,16 +118,16 @@ export default {
     },
     /**
      * 修改固件
-     * @param id, name, addr, email, type
+     * @param id, firmwareName, name, testType
      * @return {{code: number, data: {message: string}}}
      */
     updateSolidWare: (config) => {
-        const { id, projectName, name, email} = JSON.parse(config.body);
+        const { id, firmwareName, name, testType} = JSON.parse(config.body);
         List.some((u) => {
             if (u.id === id) {
-                u.projectName = projectName;
+                u.firmwareName = firmwareName;
                 u.name = name;
-                u.email = email;
+                u.testType = testType;
                 return true;
             }
         });

@@ -1,11 +1,11 @@
 <template>
   <div class="right-chart-2">
-    <div class="rc1-header">path数据</div>
+    <div class="rc1-header">可行路径探测</div>
 
     <div class="rc1-chart-container">
       <div class="left">
-        <div class="number">267</div>
-        <div>total path</div>
+        <div>总路径数</div>
+        <div class="number">860</div>
       </div>
 
       <dv-charts class="right" :option="option" />
@@ -23,8 +23,8 @@ export default {
           {
             type: 'pie',
             data: [
-              { name: 'favorite paths', value: 20 },
-              { name: 'others', value: 80 },
+              { name: '特别关注路径', value: 229 },
+              { name: '普通路径', value: 631 },
             ],
             radius: ['45%', '65%'],
             insideLabel: {
@@ -53,12 +53,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  font-family: Fira Code, '苹方', Courier, monospace;
 
   .rc1-header {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     height: 30px;
     line-height: 30px;
+    padding: 20px 20px;
   }
 
   .rc1-chart-container {
@@ -68,7 +70,7 @@ export default {
 
   .left {
     width: 30%;
-    font-size: 16px;
+    font-size: 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -78,7 +80,7 @@ export default {
       font-size: 34px;
       color: #096dd9;
       font-weight: bold;
-      margin-bottom: 30px;
+      margin-top: 30px;
     }
   }
 

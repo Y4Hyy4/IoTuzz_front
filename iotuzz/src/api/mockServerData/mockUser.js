@@ -74,6 +74,7 @@ export default {
             addr: addr,
             email: email,
             type: type,
+            solidWareNum: 0,
         });
         return {
             code: 20000,

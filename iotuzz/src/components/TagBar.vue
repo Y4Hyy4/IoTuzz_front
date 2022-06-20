@@ -2,7 +2,7 @@
   <div class="tags">
     <el-tag v-for="(tag, index) in tags" :key="tag.name" :closable="tag.name !== 'home'"
       :effect="$route.name === tag.name ? 'dark' : 'plain'" @click="changeMenu(tag)" @close="handleClose(tag, index)"
-      size="small">
+      size="medium" hit>
       {{ tag.label }}
     </el-tag>
   </div>
@@ -52,7 +52,7 @@ export default {
 
 <style lang="less" scoped>
 .tags {
-  padding: 20px;
+  padding: 10px 10px 5px 20px;
 
   .el-tag {
     margin-right: 15px;

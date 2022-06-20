@@ -1,16 +1,32 @@
 <template>
   <div class="SolidWareUpload">
     <el-dialog :title="operateType === 'add' ? '新增' : '更新'" :visible.sync="isShow">
-      <common-form :form-label="operateFormLabel" :form.sync="operateForm" :inline="true" ref="form"></common-form>
+      <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
+        <el-form-item label="固件名称" prop="firmwareName">
+          <el-input v-model="formData.firmwareName" placeholder="请输入固件名称" clearable prefix-icon='el-icon-cpu'
+            :style="{ width: '100%' }"></el-input>
+        </el-form-item>
+        <el-form-item label="负责人名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入负责人名称" clearable prefix-icon='el-icon-user'
+            :style="{ width: '100%' }"></el-input>
+        </el-form-item>
+        <el-form-item label="测试方法" prop="testType">
+          <el-select v-model="formData.testType" placeholder="请选择测试方法" clearable :style="{ width: '100%' }">
+            <el-option v-for="(item, index) in testTypeOptions" :key="index" :label="item.label" :value="item.value"
+              :disabled="item.disabled"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="固件上传" prop="firmware" required>
+          <el-upload ref="firmware" :file-list="firmwarefileList" :action="firmwareAction"
+            :before-upload="firmwareBeforeUpload" name="firmware">
+            <el-button size="small" type="primary" icon="el-icon-upload">上传固件</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShow = false">取消</el-button>
         <el-button type="primary" @click="confirm">确定</el-button>
       </div>
-
-      <el-upload drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      </el-upload>
     </el-dialog>
     <div class="manage-header">
       <el-button type="primary" @click="addSolidWare">新增</el-button>
@@ -20,67 +36,80 @@
       </common-form>
     </div>
 
-    <common-table :table-data="tableData" :table-label="tableLabel" :config="config" @changePage="getList()"
-      @edit="editSolidWare" @del="delSolidWare"></common-table>
-
+    <div class="firmware-table">
+      <el-table :data="tableData" style="width:100%" height="95%">
+        <el-table-column prop="firmwareName" label="固件名" fixed="left" width="220" align ="center">
+        </el-table-column>
+        <el-table-column prop="name" label="负责人名" width="180" align ="center">
+        </el-table-column>
+        <el-table-column prop="typeLabel" label="测试方法" width="180" align ="center">
+        </el-table-column>
+        <el-table-column label="操作" min-width="250px" fixed="right" align ="center">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="testFirmWare()" type="success">测试</el-button>
+            <el-button size="mini" @click="editSolidWare(scope.row)">编辑</el-button>
+            <el-button size="mini" @click="delSolidWare(scope.row)" type="danger">删除</el-button>
+            <el-button size="mini" @click="getTestReport()" type="primary">报告</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination class="pager" layout="prev, pager, next" :total="config.total" :current-page.sync="config.page"
+        @current-change="getList()" :page-size="20" :pager-counter="5" background>
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import CommonForm from '@/components/CommonForm'
-import CommonTable from "@/components/CommonTable"
 import { getSolidWareList } from "@/api/api"
 
 export default {
   name: 'solidWareUpload',
   components: {
     CommonForm,
-    CommonTable,
   },
   data() {
     return {
       operateType: 'add',
       isShow: false,
-      operateFormLabel: [
-        {
-          model: "firmwareName",
-          label: "固件名",
-          type: "input",
-        },
-        {
-          model: "name",
-          label: "负责人名",
-          type: "input",
-        },
-        {
-          model: "testType",
-          label: "测试方法",
-          type: "select",
-          opts:[
-            {
-              label: 'fuzzware',
-              value: 0,
-            },
-            {
-              label: 'sEmu',
-              value: 1,
-            },
-            {
-              label: 'μEmu',
-              value: 2,
-            },
-            {
-              label: 'p²im',
-              value: 3,
-            },
-          ]
-        },
-      ],
-      operateForm: {
-        firmwareName:'',
+      formData: {
+        firmwareName: '',
         name: '',
         testType: '',
       },
+      rules: {
+        firmwareName: [{
+          required: true,
+          message: '请输入固件名称',
+          trigger: 'blur'
+        }],
+        name: [{
+          required: true,
+          message: '请输入负责人名称',
+          trigger: 'blur'
+        }],
+        testType: [{
+          required: true,
+          message: '请选择测试方法',
+          trigger: 'change'
+        }],
+      },
+      firmwareAction: 'https://jsonplaceholder.typicode.com/posts/',
+      firmwarefileList: [],
+      testTypeOptions: [{
+        "label": "fuzzware",
+        "value": 0
+      }, {
+        "label": "sEmu",
+        "value": 1
+      }, {
+        "label": "μEmu",
+        "value": 2
+      }, {
+        "label": "p²im",
+        "value": 3
+      }],
       searchLabel: [
         {
           model: "keyword",
@@ -114,15 +143,22 @@ export default {
     }
   },
   methods: {
+    firmwareBeforeUpload(file) {
+      let isRightSize = file.size / 1024 / 1024 < 1
+      if (!isRightSize) {
+        this.$message.error('文件大小超过 1MB')
+      }
+      return isRightSize
+    },
     confirm() {
       if (this.operateType === 'edit') {
-        this.$http.post('/solidWare/edit', this.operateForm).then(res => {
+        this.$http.post('/solidWare/edit', this.formData).then(res => {
           console.log(res)
           this.isShow = false
           this.getList()
         })
       } else {
-        this.$http.post('/solidWare/add', this.operateForm).then(res => {
+        this.$http.post('/solidWare/add', this.formData).then(res => {
           console.log(res)
           this.isShow = false
           this.getList()
@@ -132,7 +168,7 @@ export default {
     addSolidWare() {
       this.isShow = true
       this.operateType = 'add'
-      this.operateForm = {
+      this.formData = {
         firmwareName: '',
         name: '',
         testType: '',
@@ -171,11 +207,23 @@ export default {
         this.config.loading = true
       })
     },
+    // testFirmWare(row) {
+    //     const id = row.id
+    //     this.$http.post('/solidWare/test', {
+    //       id:id
+    //     }).then(res => {
+    //       console.log(res)
+    //       this.$router.push('/FuzzManage/Monitor')
+    //     })
+    // },
+    testFirmWare() {
+      this.$router.push('/FuzzManage/Monitor')
+    },
     editSolidWare(row) {
       this.isShow = true
       this.operateType = 'edit'
       console.log(row)
-      this.operateForm = row
+      this.formData = row
     },
     delSolidWare(row) {
       this.$confirm('此操作将永久删除此组件，是否继续？', '提示', {
@@ -213,5 +261,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.firmware-table {
+  height: calc(100% - 62px);
+  background-color: white;
+  position: relative;
+
+  .pager {
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+  }
 }
 </style>

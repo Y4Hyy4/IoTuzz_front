@@ -27,7 +27,7 @@ export default {
   name: 'HeaderBar',
   data() {
     return {
-      userIcon: require('../assets/logo.png')
+      userIcon: require('../assets/avatar-01.png')
     }
   },
   methods: {

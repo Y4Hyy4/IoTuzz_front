@@ -4,11 +4,29 @@
 
     <div class="rc1-chart-container">
       <div class="left">
-        <div class="number">262</div>
-        <div>run time</div>
+        <div>总运行时间</div>
+        <div class="number">16:47:03</div>
       </div>
 
-      <dv-capsule-chart class="right" :config="config" />
+      <div class="right">
+        <div class="rc1-details">
+          <div>上一个崩溃</div>
+          <div class="number">16:28:53</div>
+
+        </div>
+        <div class="rc1-details">
+          <div>上一个超时</div>
+          <div class="number">00:13:04</div>
+
+        </div>
+        <div class="rc1-details">
+          <div>上一个路径</div>
+          <div class="number">00:01:29</div>
+
+        </div>
+      </div>
+
+      <!-- <dv-capsule-chart class="right" :config="config" /> -->
     </div>
   </div>
 </template>
@@ -16,27 +34,27 @@
 <script>
 export default {
   name: 'RightChart1',
-  data () {
-    return {
-      config: {
-        data: [
-          {
-            name: 'last new path',
-            value: 25
-          },
-          {
-            name: 'last uniq crash',
-            value: 66
-          },
-          {
-            name: 'last uniq hang',
-            value: 123
-          },
-        ],
-        unit: 's'
-      }
-    }
-  }
+  // data() {
+  //   return {
+  //     config: {
+  //       data: [
+  //         {
+  //           name: 'last new path',
+  //           value: 25
+  //         },
+  //         {
+  //           name: 'last uniq crash',
+  //           value: 66
+  //         },
+  //         {
+  //           name: 'last uniq hang',
+  //           value: 123
+  //         },
+  //       ],
+  //       unit: 's'
+  //     }
+  //   }
+  // }
 }
 </script>
 
@@ -46,12 +64,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  font-family: Fira Code, '苹方', Courier, monospace;
 
   .rc1-header {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     height: 30px;
     line-height: 30px;
+    padding: 20px 40px;
   }
 
   .rc1-chart-container {
@@ -61,7 +81,7 @@ export default {
 
   .left {
     width: 30%;
-    font-size: 16px;
+    font-size: 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -71,7 +91,7 @@ export default {
       font-size: 34px;
       color: #096dd9;
       font-weight: bold;
-      margin-bottom: 30px;
+      margin-top: 30px;
     }
   }
 
@@ -80,6 +100,21 @@ export default {
     padding-bottom: 20px;
     padding-right: 20px;
     box-sizing: border-box;
+
+    .rc1-details {
+      height: 33%;
+      display: flex;
+      justify-content: center;
+      font-size: 20px;
+      align-items: center;
+    }
+
+    .number {
+      font-size: 28px;
+      color: #096dd9;
+      font-weight: bold;
+      padding-left: 30px;
+    }
   }
 }
 </style>
