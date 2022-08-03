@@ -7,13 +7,14 @@ export const getData = () => {
   })
 }
 
-export const getUser = (params) => {
-  return axios.request({
-      url: '/user/getUser',
-      method: 'get',
-      params
-  })
-}
+// Mock
+// export const getUser = (params) => {
+//   return axios.request({
+//       url: '/user/getUser',
+//       method: 'get',
+//       params
+//   })
+// }
 
 export const getMenu = (param) => {
   return axios.request({
@@ -28,5 +29,21 @@ export const getSolidWareList = (params) => {
     url: '/solidWare/getSolidWare',
     method:'get',
     params
+  })
+}
+
+export const getUser = (params) => {
+  return axios.request({
+      url: '/api/user/sorted',
+      method: 'get',
+      params
+  })
+}
+
+export const callKit = (params) => {
+  return axios.request({
+    url:'/api/kit/call/',
+    method:'post',
+    data:params
   })
 }

@@ -62,7 +62,7 @@
 
 <script>
 import CommonForm from '@/components/CommonForm'
-import { getSolidWareList } from "@/api/api"
+import { getSolidWareList, callKit} from "@/api/api"
 
 export default {
   name: 'solidWareUpload',
@@ -217,6 +217,7 @@ export default {
     //     })
     // },
     testFirmWare() {
+      callKit()
       this.$router.push('/FuzzManage/Monitor')
     },
     editSolidWare(row) {

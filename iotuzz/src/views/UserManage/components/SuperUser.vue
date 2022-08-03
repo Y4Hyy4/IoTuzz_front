@@ -38,7 +38,7 @@ export default {
       isShow: false,
       operateFormLabel: [
         {
-          model: "name",
+          model: "username",
           label: "用户名",
           type: "input",
         },
@@ -69,7 +69,7 @@ export default {
         },
       ],
       operateForm: {
-        name: '',
+        username: '',
         type: '',
         email: '',
         addr: '',
@@ -87,7 +87,7 @@ export default {
       tableData: [],
       tableLabel: [
         {
-          prop: 'name',
+          prop: 'username',
           label: '用户名',
         },
         {
@@ -135,30 +135,38 @@ export default {
       this.isShow = true
       this.operateType = 'add'
       this.operateForm = {
-        name: '',
+        username: '',
         email: '',
         type: '',
         addr: '',
       }
     },
-    getList(name = '') {
-      this.config.loading = true
-      name ? (this.config.page = 1) : ''
-      console.log(getUser());
-      getUser({
-        page: this.config.page,
-        name
-      }).then((res) => {
-        res = res.data
+    getList() {
+      getUser().then((res) => {
         console.log(res)
-        this.tableData = res.list.map(item => {
-          item.typeLabel = item.type === 0 ? '个人' : '企业'
-          return item
-        })
-        this.config.total = res.count
-        this.config.loading = true
+        // console.log(res.data.results)
+        this.tableData = res.data.results
+        console.log(this.tableData)
       })
     },
+    // getList(name = '') {
+    //   this.config.loading = true
+    //   name ? (this.config.page = 1) : ''
+    //   console.log(getUser());
+    //   getUser({
+    //     page: this.config.page,
+    //     name
+    //   }).then((res) => {
+    //     res = res.data
+    //     console.log(res)
+    //     this.tableData = res.list.map(item => {
+    //       item.typeLabel = item.type === 0 ? '个人' : '企业'
+    //       return item
+    //     })
+    //     this.config.total = res.count
+    //     this.config.loading = true
+    //   })
+    // },
     editUser(row) {
       this.isShow = true
       this.operateType = 'edit'
