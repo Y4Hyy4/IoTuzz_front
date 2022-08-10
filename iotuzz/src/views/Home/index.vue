@@ -1,7 +1,7 @@
 <template>
   <div class="homepage">
     <el-carousel :interval="4000" type="card" height="500px">
-      <el-carousel-item v-for="item in carouselData" :key="item">
+      <el-carousel-item v-for="item in carouselData" :key="item.cardHeader">
         <el-card class="card-carousel" shadow="hover">
           <div slot="header" class="ccl-header">
             <span>{{ item.cardHeader }}</span>

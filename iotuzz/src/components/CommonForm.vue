@@ -4,6 +4,9 @@
       <el-input v-if="item.type === 'input'" :placeholder="`请输入${item.label}`" v-model="childForm[item.model]">
       </el-input>
 
+      <el-input v-if="item.type === 'password'" :placeholder="`请输入${item.label}`" v-model="childForm[item.model]"  show-password>
+      </el-input>
+
       <el-switch v-if="item.type === 'switch'" v-model="childForm[item.model]">
       </el-switch>
 

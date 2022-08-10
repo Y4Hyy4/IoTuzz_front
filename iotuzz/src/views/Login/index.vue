@@ -17,8 +17,10 @@
   </body>
 </template>
 <script>
-// import Mock from 'mockjs'
-import { getMenu } from "@/api/api";
+
+import { getMenu } from "@/utils/getMenu";
+import axios from "axios";
+
 
 export default {
   name: "login",
@@ -46,22 +48,39 @@ export default {
   },
   methods: {
     login() {
-      // const token =Mock.Random.guid()
-      // this.$store.commit('setToken',token)
-      // this.$router.push({name:'home'})
-
-      getMenu(this.form).then(({ data: res }) => {
-        if (res.code === 20000) {
-          this.$store.commit("clearMenu");
-          this.$store.commit("setMenu", res.data.menu);
-          this.$store.commit("setToken", res.data.token);
-          this.$store.commit("addMenu", this.$router);
-          console.log(this.$store.state.tab.menu)
-          this.$router.push({ name: "home" });
-        } else {
-          this.$message.warning(res.data.message);
-        }
-      });
+      // let getMenuRes = {}
+      const that = this;
+      axios.post('/api/token/', {
+        username: this.form.username,
+        password: that.form.password,
+      }).then((res) => {
+        this.form["token"] = res.data.access
+        axios.get("/api/profile/" + this.form.username + "/").then((res) => {
+          let getMenuRes = getMenu(res.data.user.is_superuser)
+          if (getMenuRes.code === 200) {
+            this.$store.commit("clearMenu");
+            this.$store.commit("setMenu", getMenuRes.data.menu);
+            this.$store.commit("setToken", this.form.token);
+            this.$store.commit("addMenu", this.$router);
+            console.log(this.$store.state.tab.menu)
+            this.$router.push({ name: "home" });
+          } else {
+            this.$message.warning(getMenuRes.data.message);
+          }
+        })
+      })
+      // .then(() => {
+      //   if (getMenuRes.code === 200) {
+      //     this.$store.commit("clearMenu");
+      //     this.$store.commit("setMenu", getMenuRes.data.menu);
+      //     this.$store.commit("setToken", getMenuRes.data.token);
+      //     this.$store.commit("addMenu", this.$router);
+      //     console.log(this.$store.state.tab.menu)
+      //     this.$router.push({ name: "home" });
+      //   } else {
+      //     this.$message.warning(getMenuRes.data.message);
+      //   }
+      // })
     },
   },
 };

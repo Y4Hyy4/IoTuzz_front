@@ -25,6 +25,8 @@
 import CommonForm from '@/components/CommonForm'
 import CommonTable from "@/components/CommonTable"
 import { getUser } from "@/api/api"
+import { flatten } from '@/utils/flatten'
+import axios from 'axios'
 
 export default {
   name: 'superUser',
@@ -41,6 +43,11 @@ export default {
           model: "username",
           label: "用户名",
           type: "input",
+        },
+        {
+          model: "password",
+          label: "密码",
+          type: "password"
         },
         {
           model: "email",
@@ -63,16 +70,17 @@ export default {
           ],
         },
         {
-          model: "addr",
+          model: "address",
           label: "地址",
           type: "input",
         },
       ],
       operateForm: {
         username: '',
-        type: '',
+        password: '',
         email: '',
-        addr: '',
+        type: '',
+        address: '',
       },
       searchLabel: [
         {
@@ -100,12 +108,12 @@ export default {
           label: '用户类型',
         },
         {
-          prop: 'addr',
+          prop: 'address',
           label: '地址',
           width: 320
         },
         {
-          prop: "solidWareNum",
+          prop: "upload_nums",
           label: "固件上传数量",
         }
       ],
@@ -117,17 +125,29 @@ export default {
   },
   methods: {
     confirm() {
+      let { username, password, email } = this.operateForm
+      let { type, address } = this.operateForm
+      let postNeed = { username, password, email }
+      let patchNeed = { type, address }
+      // console.log(postNeed)
+      // console.log(patchNeed)
+
       if (this.operateType === 'edit') {
-        this.$http.post('/user/edit', this.operateForm).then(res => {
-          console.log(res)
+        console.log(this.operateForm)
+        axios.patch('/api/profile/' + this.operateForm.username + '/', patchNeed).then(() => {
           this.isShow = false
+          this.tableData = []
           this.getList()
         })
       } else {
-        this.$http.post('/user/add', this.operateForm).then(res => {
+        axios.post('/api/user/', postNeed).then(res => {
           console.log(res)
-          this.isShow = false
-          this.getList()
+        }).then(() => {
+          axios.patch('/api/profile/' + this.operateForm.username + '/', patchNeed).then(() => {
+            this.isShow = false
+            this.tableData = []
+            this.getList()
+          })
         })
       }
     },
@@ -137,16 +157,26 @@ export default {
       this.operateForm = {
         username: '',
         email: '',
+        password: '',
         type: '',
-        addr: '',
+        address: '',
       }
+    },
+    editUser(row) {
+      this.isShow = true
+      this.operateType = 'edit'
+      this.operateForm = row
     },
     getList() {
       getUser().then((res) => {
-        console.log(res)
-        // console.log(res.data.results)
-        this.tableData = res.data.results
-        console.log(this.tableData)
+        // console.log(res)
+        res.data.results.forEach(item => {
+          item.typeLabel = item.type === 0 ? "个人" : "企业"
+          let flat = flatten(item)
+          this.tableData.push(flat)
+        })
+        this.config.total = res.data.count
+        // console.log(this.tableData)
       })
     },
     // getList(name = '') {
@@ -167,12 +197,7 @@ export default {
     //     this.config.loading = true
     //   })
     // },
-    editUser(row) {
-      this.isShow = true
-      this.operateType = 'edit'
-      console.log(row)
-      this.operateForm = row
-    },
+
     delUser(row) {
       this.$confirm('此操作将永久删除此组件，是否继续？', '提示', {
         confirmButtonText: "确认",
@@ -180,7 +205,7 @@ export default {
         type: "warning",
       }).then(() => {
         const id = row.id
-        this.$http.post('/user/del', {
+        axios.post('/user/del', {
           id: id
         }).then(res => {
           console.log(res)
