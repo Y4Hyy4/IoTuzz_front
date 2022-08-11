@@ -5,20 +5,20 @@
         <div class="rmc-top-container">
           <dv-border-box-9 class="rmctc-left-container">
 
-            <Center-Cmp />
+            <Center-Cmp :CenterCmpData="CenterCmpData"></Center-Cmp>
 
           </dv-border-box-9>
 
           <div class="rmctc-right-container">
             <dv-border-box-9 class="rmctc-chart-1">
 
-              <Right-Chart-1 />
+              <Right-Chart-1 :RightChart1Data="RightChart1Data"></Right-Chart-1>
 
             </dv-border-box-9>
 
             <dv-border-box-9 class="rmctc-chart-2" :reverse="true">
 
-              <Right-Chart-2 />
+              <Right-Chart-2 :RightChart2Data="RightChart2Data"></Right-Chart-2>
 
             </dv-border-box-9>
           </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import CenterCmp from './components/CenterCmp'
 import RightChart1 from './components/RightChart1'
 import RightChart2 from './components/RightChart2'
@@ -40,6 +41,98 @@ export default {
     RightChart1,
     RightChart2,
   },
+  data() {
+    return {
+      CenterCmpData: [
+        {
+          name: '特殊崩溃',
+          value: 4
+        },
+        {
+          name: '特殊超时',
+          value: 1
+        },
+        {
+          name: '普通崩溃',
+          value: 9
+        },
+        {
+          name: '普通超时',
+          value: 3
+        }
+      ],
+      RightChart1Data: [
+        {
+          name: '总运行时间',
+          value: '16:47:10'
+        },
+        {
+          name: '上一个崩溃',
+          value: '16:28:53'
+        },
+        {
+          name: '上一个超时',
+          value: '00:13:04'
+        },
+        {
+          name: '上一个路径',
+          value: '00:01:29'
+        },
+      ],
+      RightChart2Data: [
+        { name: '特别关注路径', value: 229 },
+        { name: '普通路径', value: 631 },
+      ],
+      timer: 0,
+    }
+  },
+  methods: {
+    // pageChange(params) {
+    //   clearTimeout(this.pollingST)
+    //   // 轮询
+    //   this.polling(params)
+    // },
+    getData() {
+      axios({
+        method: 'post',
+        url: '/api/testinfo/',
+        data: this.formData,
+      })
+        .then(res => {
+          let newData = res.data
+          console.log(newData)
+          this.CenterCmpData[0].value = newData.xCrash
+          this.CenterCmpData[1].value = newData.xLate
+          this.CenterCmpData[2].value = newData.crash
+          this.CenterCmpData[3].value = newData.xLate
+          this.RightChart1Data[0].value = newData.timeTotal
+          this.RightChart1Data[1].value = newData.timeLastCrash
+          this.RightChart1Data[2].value = newData.timeLastLate
+          this.RightChart1Data[3].value = newData.timeLastPath
+          this.RightChart2Data[0].value = newData.xPath
+          this.RightChart2Data[1].value = newData.path
+          console.log(this.CenterCmpData)
+        })
+    },
+    // polling(params) {
+    //   this.getData()
+    //     .then(newData => {
+    //       this.pollingST = setTimeout(() => {
+
+    //         clearTimeout(this.pollingST)
+    //         this.polling(params)
+    //       }, 10000)
+    //     })
+    // },
+  },
+  created() {
+    this.getData();
+    this.timer = setInterval(this.getData, 10000);
+  },
+  destroyed() {
+    // clearTimeout(this.pollingST)
+    clearInterval(this.timer)
+  }
 }
 </script>
 

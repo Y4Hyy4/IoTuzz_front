@@ -8,22 +8,22 @@
 
     <div class="cc-details">
       <div style="margin-right: 40px;">崩溃用例</div>
-      <div class="card">1</div>
-      <div class="card">3</div>
+      <div class="card">{{ Math.floor(this.crashTotal / 10) }}</div>
+      <div class="card">{{ this.crashTotal % 10 }}</div>
     </div>
     <div class="cc-details">
       <div style="margin-right: 40px;">超时用例</div>
-      <div class="card">0</div>
-      <div class="card">4</div>
+      <div class="card">{{ Math.floor(this.lateTotal / 10) }}</div>
+      <div class="card">{{ this.lateTotal % 10 }}</div>
     </div>
 
     <div class="cc-main-container">
       <div class="ccmc-left">
         <div class="station-info">
-          特殊崩溃用例<span>4</span>
-        </div>  
+          特殊崩溃用例<span>{{this.config.data[0].value}}</span>
+        </div>
         <div class="station-info">
-          特殊超时用例<span>1</span>
+          特殊超时用例<span>{{this.config.data[1].value}}</span>
         </div>
       </div>
 
@@ -31,10 +31,10 @@
 
       <div class="ccmc-right">
         <div class="station-info">
-          <span>9</span>普通崩溃用例
+          <span>{{this.config.data[2].value}}</span>普通崩溃用例
         </div>
         <div class="station-info">
-          <span>3</span>普通超时用例
+          <span>{{this.config.data[3].value}}</span>普通超时用例
         </div>
       </div>
 
@@ -48,39 +48,33 @@ import LabelTag from './LabelTag'
 
 export default {
   name: 'CenterCmp',
+  props: ['CenterCmpData'],
   components: {
     LabelTag
   },
   data() {
     return {
       config: {
-        data: [
-          {
-            name: '特殊崩溃',
-            value: 4
-          },
-          {
-            name: '特殊超时',
-            value: 1
-          },
-          {
-            name: '普通崩溃',
-            value: 9
-          },
-          {
-            name: '普通超时',
-            value: 3
-          }
-        ],
+        data: this.CenterCmpData,
         color: ['#00baff', '#3de7c9', '#fff', '#ffc530', '#469f4b'],
         lineWidth: 40,
         radius: '55%',
         activeRadius: '60%'
       },
-
       labelConfig: {
         data: ['特殊崩溃', '特殊超时', '普通崩溃', '普通超时']
-      }
+      },
+    }
+  },
+  mounted() {
+    // console.log(this.config.data[0].value)
+  },
+  computed: {
+    crashTotal: function () {
+      return this.CenterCmpData[0].value + this.CenterCmpData[2].value
+    },
+    lateTotal: function () {
+      return this.CenterCmpData[1].value + this.CenterCmpData[3].value
     }
   }
 }
@@ -94,7 +88,7 @@ export default {
   padding: 0px;
   display: flex;
   flex-direction: column;
-  font-family: Fira Code,'苹方', Courier, monospace;
+  font-family: Fira Code, '苹方', Courier, monospace;
 
   .cc-header {
     height: 70px;

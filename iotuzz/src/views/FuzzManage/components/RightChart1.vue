@@ -5,28 +5,26 @@
     <div class="rc1-chart-container">
       <div class="left">
         <div>总运行时间</div>
-        <div class="number">16:47:03</div>
+        <div class="number">{{this.config.data[0].value}}</div>
       </div>
 
       <div class="right">
         <div class="rc1-details">
           <div>上一个崩溃</div>
-          <div class="number">16:28:53</div>
+          <div class="number">{{this.config.data[1].value}}</div>
 
         </div>
         <div class="rc1-details">
           <div>上一个超时</div>
-          <div class="number">00:13:04</div>
+          <div class="number">{{this.config.data[2].value}}</div>
 
         </div>
         <div class="rc1-details">
           <div>上一个路径</div>
-          <div class="number">00:01:29</div>
+          <div class="number">{{this.config.data[3].value}}</div>
 
         </div>
       </div>
-
-      <!-- <dv-capsule-chart class="right" :config="config" /> -->
     </div>
   </div>
 </template>
@@ -34,27 +32,14 @@
 <script>
 export default {
   name: 'RightChart1',
-  // data() {
-  //   return {
-  //     config: {
-  //       data: [
-  //         {
-  //           name: 'last new path',
-  //           value: 25
-  //         },
-  //         {
-  //           name: 'last uniq crash',
-  //           value: 66
-  //         },
-  //         {
-  //           name: 'last uniq hang',
-  //           value: 123
-  //         },
-  //       ],
-  //       unit: 's'
-  //     }
-  //   }
-  // }
+  props: ['RightChart1Data'],
+  data() {
+    return {
+      config: {
+        data: this.RightChart1Data
+      }
+    }
+  }
 }
 </script>
 

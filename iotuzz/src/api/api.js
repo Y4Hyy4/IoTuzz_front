@@ -7,15 +7,6 @@ export const getData = () => {
   });
 };
 
-// Mock
-// export const getUser = (params) => {
-//   return axios.request({
-//       url: '/user/getUser',
-//       method: 'get',
-//       params
-//   })
-// }
-
 export const getMenu = (param) => {
   return axios.request({
     url: "/permission/getMenu",
@@ -23,15 +14,6 @@ export const getMenu = (param) => {
     data: param,
   });
 };
-
-// Mock
-// export const getSolidWareList = (params) => {
-//   return axios.request({
-//     url: '/solidWare/getSolidWare',
-//     method:'get',
-//     params
-//   })
-// }
 
 export const getUser = (params) => {
   return axios.request({
@@ -59,7 +41,7 @@ export const patchProfile = (params) => {
 
 export const callKit = (params) => {
   return axios.request({
-    url: "/api/kit/call/",
+    url: "/api/firmware/call/",
     method: "post",
     data: params,
   });
@@ -69,5 +51,6 @@ export const getFirmware = () => {
   return axios.request({
     url: "/api/firmware",
     method: "get",
+    headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
   });
 };

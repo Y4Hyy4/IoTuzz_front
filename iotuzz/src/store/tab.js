@@ -53,7 +53,7 @@ export default {
         if (item.children) {
           item.children = item.children.map((item) => {
             item.component = () => import(`../views/${item.url}`);
-            console.log(item)
+            // console.log(item)
             return item;
           });
           menuArray.push(...item.children);

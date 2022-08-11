@@ -53,34 +53,29 @@ export default {
       axios.post('/api/token/', {
         username: this.form.username,
         password: that.form.password,
-      }).then((res) => {
-        this.form["token"] = res.data.access
-        axios.get("/api/profile/" + this.form.username + "/").then((res) => {
-          let getMenuRes = getMenu(res.data.user.is_superuser)
-          if (getMenuRes.code === 200) {
-            this.$store.commit("clearMenu");
-            this.$store.commit("setMenu", getMenuRes.data.menu);
-            this.$store.commit("setToken", this.form.token);
-            this.$store.commit("addMenu", this.$router);
-            console.log(this.$store.state.tab.menu)
-            this.$router.push({ name: "home" });
-          } else {
-            this.$message.warning(getMenuRes.data.message);
+      })
+        .then(res => {
+          this.form["token"] = res.data.access
+          axios.get("/api/profile/" + this.form.username + "/")
+            .then(res => {
+              let getMenuRes = getMenu(res.data.user.is_superuser)
+              if (getMenuRes.code === 200) {
+                this.$store.commit("clearMenu");
+                this.$store.commit("setMenu", getMenuRes.data.menu);
+                this.$store.commit("setToken", this.form.token);
+                this.$store.commit("addMenu", this.$router);
+                console.log(this.$store.state.tab.menu)
+                this.$router.push({ name: "home" });
+              } else {
+                this.$message.warning(getMenuRes.data.message);
+              }
+            })
+        })
+        .catch(error => {
+          if (error.response.status === 401) {
+            this.$message.warning('密码错误请重新输入');
           }
         })
-      })
-      // .then(() => {
-      //   if (getMenuRes.code === 200) {
-      //     this.$store.commit("clearMenu");
-      //     this.$store.commit("setMenu", getMenuRes.data.menu);
-      //     this.$store.commit("setToken", getMenuRes.data.token);
-      //     this.$store.commit("addMenu", this.$router);
-      //     console.log(this.$store.state.tab.menu)
-      //     this.$router.push({ name: "home" });
-      //   } else {
-      //     this.$message.warning(getMenuRes.data.message);
-      //   }
-      // })
     },
   },
 };

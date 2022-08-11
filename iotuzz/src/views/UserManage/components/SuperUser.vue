@@ -74,6 +74,11 @@ export default {
           label: "地址",
           type: "input",
         },
+        {
+          model: "bio",
+          label: "简介",
+          type: "input",
+        },
       ],
       operateForm: {
         username: '',
@@ -81,6 +86,7 @@ export default {
         email: '',
         type: '',
         address: '',
+        bio: '',
       },
       searchLabel: [
         {
@@ -113,8 +119,8 @@ export default {
           width: 320
         },
         {
-          prop: "upload_nums",
-          label: "固件上传数量",
+          prop: "bio",
+          label: "用户简介",
         }
       ],
       config: {
@@ -204,17 +210,20 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        const id = row.id
-        axios.post('/user/del', {
-          id: id
-        }).then(res => {
-          console.log(res)
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          this.getList()
+        axios({
+          method: 'delete',
+          url: '/api/user/' + row.username + '/',
+          headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
         })
+          .then(res => {
+            console.log(res)
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            this.tableData = []
+            this.getList()
+          })
       }).catch(() => {
         this.$message({
           type: 'info',

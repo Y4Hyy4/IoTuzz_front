@@ -54,10 +54,10 @@
         </el-table-column>
         <el-table-column label="操作" min-width="250px" fixed="right" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="testFirmWare()" type="success">测试</el-button>
+            <el-button size="mini" @click="testFirmWare(scope.row)" type="success">测试</el-button>
             <el-button size="mini" @click="editSolidWare(scope.row)">编辑</el-button>
             <el-button size="mini" @click="delSolidWare(scope.row)" type="danger">删除</el-button>
-            <el-button size="mini" @click="getTestReport()" type="primary">报告</el-button>
+            <el-button size="mini" @click="getTestReport(scope.row)" type="primary">报告</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,7 +70,6 @@
 
 <script>
 import CommonForm from '@/components/CommonForm'
-import { getFirmware, callKit } from "@/api/api"
 // import axios from '@/api/axios'
 import axios from 'axios'
 
@@ -208,13 +207,33 @@ export default {
           this.tableData = []
           this.getList()
         })
-        // axios.post('/api/firmware/', this.formData).then(() => {
-        //   this.isShow = false
-        //   this.tableData = []
-        //   this.getList()
-        // })
       }
 
+    },
+    testFirmWare(row) {
+      this.$confirm('是否确定开始测试？', '提示', {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // console.log(row)
+        axios({
+          method: 'post',
+          url: '/api/firmware/call/',
+          headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token },
+          data: row
+        })
+          .then(res => {
+            console.log(res)
+            this.$router.push('/FuzzManage/Monitor')
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消测试',
+        })
+      })
+      
     },
     addSolidWare() {
       this.isShow = true
@@ -224,76 +243,6 @@ export default {
         duty: '',
         test_type: '',
       }
-    },
-    getList() {
-      getFirmware().then((res) => {
-        res = res.data.results
-        this.tableData = res.map(item => {
-          switch (item.test_type) {
-            case 0:
-              item.typeLabel = 'fuzzware'
-              break
-            case 1:
-              item.typeLabel = 'μEmu'
-              break
-            case 2:
-              item.typeLabel = 'p²im'
-              break
-            case 3:
-              item.typeLabel = 'half-fuzz'
-              break
-            default:
-              break;
-          }
-          return item
-        })
-      })
-    },
-    // getList(name = '') {
-    //   this.config.loading = true
-    //   name ? (this.config.page = 1) : ''
-    //   console.log(getSolidWareList());
-    //   getSolidWareList({
-    //     page: this.config.page,
-    //     name
-    //   }).then((res) => {
-    //     res = res.data
-    //     console.log(res)
-    //     this.tableData = res.list.map(item => {
-    //       switch (item.testType) {
-    //         case 0:
-    //           item.typeLabel = 'fuzzware'
-    //           break
-    //         case 1:
-    //           item.typeLabel = 'sEmu'
-    //           break
-    //         case 2:
-    //           item.typeLabel = 'μEmu'
-    //           break
-    //         case 3:
-    //           item.typeLabel = 'p²im'
-    //           break
-    //         default:
-    //           break;
-    //       }
-    //       return item
-    //     })
-    //     this.config.total = res.count
-    //     this.config.loading = true
-    //   })
-    // },
-    // testFirmWare(row) {
-    //     const id = row.id
-    //     this.$http.post('/solidWare/test', {
-    //       id:id
-    //     }).then(res => {
-    //       console.log(res)
-    //       this.$router.push('/FuzzManage/Monitor')
-    //     })
-    // },
-    testFirmWare() {
-      callKit()
-      this.$router.push('/FuzzManage/Monitor')
     },
     editSolidWare(row) {
       this.isShow = true
@@ -307,23 +256,56 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        const id = row.id
-        axios.post('/solidWare/del', {
-          id: id
-        }).then(res => {
-          console.log(res)
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          this.getList()
+        console.log(row)
+        axios({
+          method: 'delete',
+          url: '/api/firmware/' + row.id + '/',
+          headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
         })
+          .then(res => {
+            console.log(res)
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            this.tableData = []
+            this.getList()
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除',
         })
       })
+    },
+    getList() {
+      axios({
+        method: 'get',
+        url: '/api/firmware/',
+        headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
+      })
+        .then((res) => {
+          res = res.data.results
+          this.tableData = res.map(item => {
+            switch (item.test_type) {
+              case 0:
+                item.typeLabel = 'fuzzware'
+                break
+              case 1:
+                item.typeLabel = 'μEmu'
+                break
+              case 2:
+                item.typeLabel = 'p²im'
+                break
+              case 3:
+                item.typeLabel = 'half-fuzz'
+                break
+              default:
+                break;
+            }
+            return item
+          })
+        })
     },
   },
   created() {

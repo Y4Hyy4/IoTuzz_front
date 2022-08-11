@@ -5,7 +5,7 @@
     <div class="rc1-chart-container">
       <div class="left">
         <div>总路径数</div>
-        <div class="number">860</div>
+        <div class="number">{{this.pathTotal}}</div>
       </div>
 
       <dv-charts class="right" :option="option" />
@@ -16,16 +16,14 @@
 <script>
 export default {
   name: 'RightChart2',
-  data () {
+  props: ['RightChart2Data'],
+  data() {
     return {
       option: {
         series: [
           {
             type: 'pie',
-            data: [
-              { name: '特别关注路径', value: 229 },
-              { name: '普通路径', value: 631 },
-            ],
+            data: this.RightChart2Data,
             radius: ['45%', '65%'],
             insideLabel: {
               show: false
@@ -42,6 +40,11 @@ export default {
         ],
         color: ['#00baff', '#3de7c9']
       }
+    }
+  },
+  computed: {
+    pathTotal: function () {
+      return this.RightChart2Data[0].value + this.RightChart2Data[1].value
     }
   }
 }
