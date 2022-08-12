@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
   // store.commit('clearToken')
   store.commit("getToken");
   const token = store.state.user.token;
-  console.log("@token", token);
+  // console.log("@token", token);
   if (!token && to.name !== "login") {
     next({ name: "login" });
   } else if (token && to.name === "login") {

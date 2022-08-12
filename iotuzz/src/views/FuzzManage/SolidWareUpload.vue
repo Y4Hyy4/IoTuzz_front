@@ -223,8 +223,15 @@ export default {
           headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token },
           data: row
         })
-          .then(res => {
-            console.log(res)
+          .then(() => {
+            // console.log(row)
+            let testState = {
+              file_path: row.file_path,
+              test_type: row.test_type
+            }
+            this.$store.commit("clearTestState")
+            this.$store.commit("setTestState", testState);
+            console.log(this.$store.state.test)
             this.$router.push('/FuzzManage/Monitor')
           })
       }).catch(() => {
@@ -233,7 +240,7 @@ export default {
           message: '已取消测试',
         })
       })
-      
+
     },
     addSolidWare() {
       this.isShow = true

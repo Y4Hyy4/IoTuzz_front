@@ -87,44 +87,56 @@ export default {
     }
   },
   methods: {
-    // pageChange(params) {
-    //   clearTimeout(this.pollingST)
-    //   // 轮询
-    //   this.polling(params)
-    // },
     getData() {
-      axios({
-        method: 'post',
-        url: '/api/testinfo/',
-        data: this.formData,
-      })
-        .then(res => {
-          let newData = res.data
-          console.log(newData)
-          this.CenterCmpData[0].value = newData.xCrash
-          this.CenterCmpData[1].value = newData.xLate
-          this.CenterCmpData[2].value = newData.crash
-          this.CenterCmpData[3].value = newData.xLate
-          this.RightChart1Data[0].value = newData.timeTotal
-          this.RightChart1Data[1].value = newData.timeLastCrash
-          this.RightChart1Data[2].value = newData.timeLastLate
-          this.RightChart1Data[3].value = newData.timeLastPath
-          this.RightChart2Data[0].value = newData.xPath
-          this.RightChart2Data[1].value = newData.path
-          console.log(this.CenterCmpData)
+      console.log(this.$store.state.test)
+      if (this.$store.state.test.isTesting) {
+        axios({
+          method: 'post',
+          url: '/api/testinfo/',
+          data: {
+            'test_type': this.$store.state.test.test_type,
+            'file_path': this.$store.state.test.file_path
+          },
         })
+          .then(res => {
+            let newData = res.data
+            // console.log(newData)
+            this.CenterCmpData[0].value = newData.xCrash
+            this.CenterCmpData[1].value = newData.xLate
+            this.CenterCmpData[2].value = newData.crash
+            this.CenterCmpData[3].value = newData.xLate
+            this.RightChart1Data[0].value = newData.timeTotal
+            this.RightChart1Data[1].value = newData.timeLastCrash
+            this.RightChart1Data[2].value = newData.timeLastLate
+            this.RightChart1Data[3].value = newData.timeLastPath
+            this.RightChart2Data[0].value = newData.xPath
+            this.RightChart2Data[1].value = newData.path
+            // console.log(this.CenterCmpData)
+          })
+      }
     },
-    // polling(params) {
-    //   this.getData()
-    //     .then(newData => {
-    //       this.pollingST = setTimeout(() => {
-
-    //         clearTimeout(this.pollingST)
-    //         this.polling(params)
-    //       }, 10000)
-    //     })
-    // },
   },
+  // watch: {
+  //   '$store.state.test': function (newVal) {
+  //     console(newVal)
+  //   },
+  //   '$store.state.test.isTesting': function (newVal) {
+  //     console(newVal)
+  //   },
+  // },
+  // watch: {
+  //   isTesting(new, old) {
+  //     if (new === true) {
+  //       this.getData();
+  //     }
+
+  //   }
+  // },
+  // computed: {
+  //   isTesting: function () {
+  //     return this.$store.state.test.isTesting
+  //   }
+  // },
   created() {
     this.getData();
     this.timer = setInterval(this.getData, 10000);
