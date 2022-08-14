@@ -57,7 +57,6 @@
             <el-button size="mini" @click="testFirmWare(scope.row)" type="success">测试</el-button>
             <el-button size="mini" @click="editSolidWare(scope.row)">编辑</el-button>
             <el-button size="mini" @click="delSolidWare(scope.row)" type="danger">删除</el-button>
-            <el-button size="mini" @click="getTestReport(scope.row)" type="primary">报告</el-button>
           </template>
         </el-table-column>
       </el-table>

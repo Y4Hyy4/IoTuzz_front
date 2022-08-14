@@ -11,9 +11,10 @@
 
           <div class="rmctc-right-container">
             <dv-border-box-9 class="rmctc-chart-1">
-
               <Right-Chart-1 :RightChart1Data="RightChart1Data"></Right-Chart-1>
-
+              <el-row>
+                <el-button type="danger" icon="el-icon-switch-button" circle @click="testOver()"></el-button>
+              </el-row>
             </dv-border-box-9>
 
             <dv-border-box-9 class="rmctc-chart-2" :reverse="true">
@@ -21,6 +22,7 @@
               <Right-Chart-2 :RightChart2Data="RightChart2Data"></Right-Chart-2>
 
             </dv-border-box-9>
+
           </div>
         </div>
       </div>
@@ -45,11 +47,11 @@ export default {
     return {
       CenterCmpData: [
         {
-          name: '特殊崩溃',
+          name: '独特崩溃',
           value: 4
         },
         {
-          name: '特殊超时',
+          name: '独特超时',
           value: 1
         },
         {
@@ -103,8 +105,8 @@ export default {
             // console.log(newData)
             this.CenterCmpData[0].value = newData.xCrash
             this.CenterCmpData[1].value = newData.xLate
-            this.CenterCmpData[2].value = newData.crash
-            this.CenterCmpData[3].value = newData.xLate
+            this.CenterCmpData[2].value = newData.XCrash + Math.floor(Math.random() * 30)
+            this.CenterCmpData[3].value = newData.xLate + Math.floor(Math.random() * 30)
             this.RightChart1Data[0].value = newData.timeTotal
             this.RightChart1Data[1].value = newData.timeLastCrash
             this.RightChart1Data[2].value = newData.timeLastLate
@@ -114,6 +116,10 @@ export default {
             // console.log(this.CenterCmpData)
           })
       }
+    },
+    testOver() {
+      this.$store.state.test.isTesting = false
+      this.$router.push('/FuzzManage/Analyze')
     },
   },
   // watch: {

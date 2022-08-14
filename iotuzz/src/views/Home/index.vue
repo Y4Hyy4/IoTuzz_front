@@ -38,7 +38,7 @@
           <div class="cc-body">
             <div class="start">
               <li>准备希望测试的固件(.elf)</li>
-              <li>点击固件测试模块中固件上传</li>
+              <li>点击固件管理模块中固件上传</li>
               <li>新建固件</li>
               <li>配置信息</li>
               <li>开始测试</li>
