@@ -131,6 +131,9 @@ export default {
           this.$router.push('/FuzzManage/Analyze')
         })
     },
+    timeTotalX() {
+
+    },
     // watch: {
     //   '$store.state.test': function (newVal) {
     //     console(newVal)
