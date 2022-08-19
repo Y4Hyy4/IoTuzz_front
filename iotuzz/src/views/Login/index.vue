@@ -11,7 +11,8 @@
         <el-input type="password" v-model="form.password" auto-complete="off" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item class="login_submit">
-        <el-button type="primary" @click="login" round class="login_submit">Login</el-button>
+        <el-button type="primary" @click="signIn" round>登录</el-button>
+        <!-- <el-button type="primary" @click="signUp" round>注册</el-button> -->
       </el-form-item>
     </el-form>
   </body>
@@ -47,7 +48,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    signIn() {
       // let getMenuRes = {}
       const that = this;
       axios.post('/api/token/', {
@@ -60,6 +61,7 @@ export default {
             .then(res => {
               let getMenuRes = getMenu(res.data.user.is_superuser)
               if (getMenuRes.code === 200) {
+                this.$store.commit("clearTestState")
                 this.$store.commit("clearMenu");
                 this.$store.commit("setMenu", getMenuRes.data.menu);
                 this.$store.commit("setToken", this.form.token);
@@ -77,6 +79,8 @@ export default {
           }
         })
     },
+    // signUp() {
+    // }
   },
 };
 </script>

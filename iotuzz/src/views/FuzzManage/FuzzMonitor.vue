@@ -118,38 +118,48 @@ export default {
       }
     },
     testOver() {
-      this.$store.state.test.isTesting = false
-      this.$router.push('/FuzzManage/Analyze')
+      axios({
+        method: 'post',
+        url: '/api/testover/',
+        headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token },
+        data:{
+          'pid': this.$store.state.test.test_pid,
+        }
+      })
+        .then(() => {
+          this.$store.commit("clearTestState")
+          this.$router.push('/FuzzManage/Analyze')
+        })
     },
-  },
-  // watch: {
-  //   '$store.state.test': function (newVal) {
-  //     console(newVal)
-  //   },
-  //   '$store.state.test.isTesting': function (newVal) {
-  //     console(newVal)
-  //   },
-  // },
-  // watch: {
-  //   isTesting(new, old) {
-  //     if (new === true) {
-  //       this.getData();
-  //     }
+    // watch: {
+    //   '$store.state.test': function (newVal) {
+    //     console(newVal)
+    //   },
+    //   '$store.state.test.isTesting': function (newVal) {
+    //     console(newVal)
+    //   },
+    // },
+    // watch: {
+    //   isTesting(new, old) {
+    //     if (new === true) {
+    //       this.getData();
+    //     }
 
-  //   }
-  // },
-  // computed: {
-  //   isTesting: function () {
-  //     return this.$store.state.test.isTesting
-  //   }
-  // },
-  created() {
-    this.getData();
-    this.timer = setInterval(this.getData, 10000);
-  },
-  destroyed() {
-    // clearTimeout(this.pollingST)
-    clearInterval(this.timer)
+    //   }
+    // },
+    // computed: {
+    //   isTesting: function () {
+    //     return this.$store.state.test.isTesting
+    //   }
+    // },
+    created() {
+      this.getData();
+      this.timer = setInterval(this.getData, 10000);
+    },
+    destroyed() {
+      // clearTimeout(this.pollingST)
+      clearInterval(this.timer)
+    }
   }
 }
 </script>

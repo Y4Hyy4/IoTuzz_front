@@ -185,24 +185,6 @@ export default {
         // console.log(this.tableData)
       })
     },
-    // getList(name = '') {
-    //   this.config.loading = true
-    //   name ? (this.config.page = 1) : ''
-    //   console.log(getUser());
-    //   getUser({
-    //     page: this.config.page,
-    //     name
-    //   }).then((res) => {
-    //     res = res.data
-    //     console.log(res)
-    //     this.tableData = res.list.map(item => {
-    //       item.typeLabel = item.type === 0 ? '个人' : '企业'
-    //       return item
-    //     })
-    //     this.config.total = res.count
-    //     this.config.loading = true
-    //   })
-    // },
 
     delUser(row) {
       this.$confirm('此操作将永久删除此组件，是否继续？', '提示', {

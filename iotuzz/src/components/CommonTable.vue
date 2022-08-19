@@ -1,14 +1,14 @@
 <template>
     <div class="common-table">
-        <el-table :data="tableData" height="90%" stripe>
-            <el-table-column show-overflow-tooltip v-for="item in tableLabel" :key="item.prop" :label="item.label"
-                :width="item.width ? item.width : 125">
+        <el-table :data="tableData" height="90%" stripe style="font-size: 18px;">
+            <el-table-column show-overflow-tooltip v-for="item in tableLabel" :key="item.prop" :label="item.label" align="center"
+                :width="item.width ? item.width : 200">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row[item.prop] }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作" min-width="180px">
+            <el-table-column label="操作" min-width="220px">
                 <template slot-scope="scope">
 
                     <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>

@@ -16,16 +16,20 @@
       <el-col :span="8">
         <el-card class="card-intro" shadow="hover" style="height: 480px;">
           <div slot="header" class="cc-header">
-            <span style="color: #f18b6d;">公告栏</span>
+            <span style="color: #6a4d8a;">项目简介</span>
           </div>
           <div class="cc-body">
             <div class="broad">
-              <p> 2022年5月4日</p>
-              <p> 此次测试为核心内容测试 </p>
+              <p> 基于虚拟化的物联网设备固件自动化测试与分析平台的三个创新点：</p>
               <p>
-                在计算中，固件是一类特定的计算机软件，为设备的特定硬件提供低级控制。固件，例如个人计算机的BIOS，可以包含设备的基本功能，并且可以向更高级别的软件（例如操作系统）提供硬件抽象服务。对于不太复杂的设备，固件可以作为设备的完整操作系统，执行所有控制、监控和数据操作功能。包含固件的设备的典型示例包括嵌入式系统（运行嵌入式软件）、家用和个人用品、计算机和计算机外围设备。
-                固件保存在非易失性存储器设备中，如ROM、EPROM、EEPROM和闪存。更新固件要求物理更换ROM集成电路，或通过特殊程序重新编程EPROM或闪存。[1]
-                某些固件内存设备是永久安装的，制造后无法更改。更新固件的常见原因包括修复错误或向设备添加功能。</p>
+                一是利用外设多模型融合建模，将现有顶级论文中的多个外设仿真模型进行融合，优势互补，从而提高了准确度，扩大了适用范围。
+              </p>
+              <p>
+                二是优化的模糊测试方案。和之前工作仅仅挪用传统模糊测试不同，本项目根据物联网设备的特点，对模糊测试的三大关键部分进行了优化。在测试用例生成中，利用符号执行有针对性地选取种子；在执行路径反馈中，排除了中断路径的干扰；在无声崩溃的检测中，提出了辅助崩溃堆栈异常检测算法。
+              </p>
+              <p>
+                三是可拓展性强。对于不同的外设仿真模型，可以以插件的形式进行添加、替换和融合使用，无需二次修改原始的仿真工具，实现了外设仿真与模糊测试的解耦
+              </p>
             </div>
           </div>
         </el-card>
@@ -33,16 +37,18 @@
       <el-col :span="8">
         <el-card class="card-intro" shadow="hover" style="height: 480px;">
           <div slot="header" class="cc-header">
-            <span style="color: #f1d204;">快速使用</span>
+            <span style="color: #f18b6d;">快速使用</span>
           </div>
           <div class="cc-body">
             <div class="start">
-              <li>准备希望测试的固件(.elf)</li>
-              <li>点击固件管理模块中固件上传</li>
-              <li>新建固件</li>
-              <li>配置信息</li>
-              <li>开始测试</li>
+              <li>准备固件</li>
+              <li>上传固件</li>
+              <li>外设分析，确定测试方法</li>
               <li>等待测试结果</li>
+              <li>分析结果</li>
+              <div class="reference" style="color: #f18b6d;">
+                <span @click="toSolidWareUpload()">点击此处快速开始</span>
+              </div>
             </div>
           </div>
         </el-card>
@@ -50,7 +56,7 @@
       <el-col :span="8">
         <el-card class="card-intro" shadow="hover" style="height: 480px;">
           <div slot="header" class="cc-header">
-            <span style="color: #6a4d8a;">安全内参</span>
+            <span style="color: #f1d204;">安全内参</span>
           </div>
           <div class="cc-body">
             <div class="reference">
@@ -86,18 +92,23 @@ export default {
     return {
       carouselData: [
         {
-          cardHeader: "多模型选择",
-          imgUrl: require("@/assets/hpage-list.png"),
+          cardHeader: "整体框架",
+          imgUrl: require("@/assets/hpage-frame.png"),
         },
         {
-          cardHeader: "可视化界面",
-          imgUrl: require("@/assets/hpage-graph.png"),
+          cardHeader: "多模型融合",
+          imgUrl: require("@/assets/hpage-multimodel.jpg"),
         },
         {
-          cardHeader: "高效可靠",
-          imgUrl: require("@/assets/hpage-eff.png"),
+          cardHeader: "模糊测试改进",
+          imgUrl: require("@/assets/hpage-ok.png"),
         },
       ]
+    }
+  },
+  methods: {
+    toSolidWareUpload() {
+      this.$router.push('/FuzzManage/SolidWareUpload')
     }
   }
 }
@@ -138,8 +149,9 @@ export default {
   }
 
   img {
-    width: 50%;
-    height: 50%;
+    margin-top: 10px;
+    width: 90%;
+    height: 90%;
   }
 }
 
@@ -179,7 +191,9 @@ export default {
 
     .reference {
       padding: 5px;
-      a {
+
+      a,
+      span {
         line-height: 2em;
         font-size: 24px;
         text-align: left;

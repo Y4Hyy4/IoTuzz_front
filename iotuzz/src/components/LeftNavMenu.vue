@@ -4,13 +4,13 @@
     <h3>{{ isCollapse ? 'IoTz' : 'IoTuzz' }}</h3>
     <el-menu-item v-for="item in noChildren" :index="item.path" :key="item.path" @click="clickMenu(item)">
       <i :class="item.icon"></i>
-      <span slot="title">{{ item.label }}</span>
+      <span slot="title" style="font-size: 15px;">{{ item.label }}</span>
     </el-menu-item>
 
     <el-submenu v-for="item in hasChildren" :index="item.path" :key="item.path">
       <template slot="title">
         <i :class=item.icon></i>
-        <span slot="title">{{ item.label }}</span>
+        <span slot="title" style="font-size: 15px;">{{ item.label }}</span>
       </template>
       <el-menu-item-group v-for="subItem in item.children" index="subItem.path" :key="subItem.path">
         <el-menu-item @click="clickMenu(subItem)" :index="subItem.path">
@@ -40,6 +40,7 @@ export default {
       this.$router.push({
         name: item.name,
       })
+      this.$store.commit('clearTestState')
       this.$store.commit('selectMenu', item)
     }
   },
@@ -69,11 +70,12 @@ export default {
 .el-menu {
   height: 100%;
   border: none;
-
+  font-size: 24px;
   h3 {
     color: #fff;
     text-align: center;
     line-height: 48px;
+    
   }
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
   <div class="Analyze">
     <div class="crash-table">
-      <el-table :data="tableData" style="width:100%" height="95%">
+      <el-table :data="tableData" style="width:100%; font-size: 18px" height="95%">
         <el-table-column prop="id" label="崩溃编号" fixed="left" width="220" align="center">
         </el-table-column>
-        <el-table-column prop="name" label="崩溃名称" width="180" align="center">
+        <el-table-column prop="name" label="崩溃路径文件" width="180" align="center">
         </el-table-column>
         <el-table-column label="操作" min-width="250px" fixed="right" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="getTestResult(scope.row)" type="primary">查看</el-button>
+            <el-button size="mini" @click="getTestResult(scope.row)" type="primary">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
