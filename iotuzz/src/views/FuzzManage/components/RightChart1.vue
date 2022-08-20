@@ -10,12 +10,12 @@
 
       <div class="right">
         <div class="rc1-details">
-          <div>上一个崩溃</div>
+          <div>上一个非重复崩溃</div>
           <div class="number">{{this.config.data[1].value}}</div>
 
         </div>
         <div class="rc1-details">
-          <div>上一个超时</div>
+          <div>上一个非重复超时</div>
           <div class="number">{{this.config.data[2].value}}</div>
 
         </div>
@@ -39,7 +39,7 @@ export default {
         data: this.RightChart1Data
       }
     }
-  }
+  },
 }
 </script>
 

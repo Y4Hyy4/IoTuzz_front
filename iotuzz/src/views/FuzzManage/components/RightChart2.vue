@@ -5,7 +5,7 @@
     <div class="rc1-chart-container">
       <div class="left">
         <div>总路径数</div>
-        <div class="number">{{this.pathTotal}}</div>
+        <div class="number">{{ this.pathTotal }}</div>
       </div>
 
       <dv-charts class="right" :option="option" />
@@ -45,6 +45,15 @@ export default {
   computed: {
     pathTotal: function () {
       return this.RightChart2Data[0].value + this.RightChart2Data[1].value
+    }
+  },
+  watch: {
+    RightChart2Data: {
+      deep: true,
+      handler(newVal) {
+        console.log(newVal)
+        this.config = { ...this.config }
+      }
     }
   }
 }

@@ -132,9 +132,9 @@ export default {
   methods: {
     confirm() {
       let { username, password, email } = this.operateForm
-      let { type, address } = this.operateForm
+      let { type, address, bio } = this.operateForm
       let postNeed = { username, password, email }
-      let patchNeed = { type, address }
+      let patchNeed = { type, address, bio }
       // console.log(postNeed)
       // console.log(patchNeed)
 
@@ -166,6 +166,7 @@ export default {
         password: '',
         type: '',
         address: '',
+        bio:'',
       }
     },
     editUser(row) {

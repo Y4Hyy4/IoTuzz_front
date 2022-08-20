@@ -20,10 +20,10 @@
     <div class="cc-main-container">
       <div class="ccmc-left">
         <div class="station-info">
-          特殊崩溃用例<span>{{this.config.data[0].value}}</span>
+          去重崩溃用例<span>{{ this.config.data[0].value }}</span>
         </div>
         <div class="station-info">
-          特殊超时用例<span>{{this.config.data[1].value}}</span>
+          去重超时用例<span>{{ this.config.data[1].value }}</span>
         </div>
       </div>
 
@@ -31,10 +31,10 @@
 
       <div class="ccmc-right">
         <div class="station-info">
-          <span>{{this.config.data[2].value}}</span>普通崩溃用例
+          <span>{{ this.config.data[2].value }}</span>重复崩溃用例
         </div>
         <div class="station-info">
-          <span>{{this.config.data[3].value}}</span>普通超时用例
+          <span>{{ this.config.data[3].value }}</span>重复超时用例
         </div>
       </div>
 
@@ -62,7 +62,7 @@ export default {
         activeRadius: '60%'
       },
       labelConfig: {
-        data: ['特殊崩溃', '特殊超时', '普通崩溃', '普通超时']
+        data: ['去重崩溃', '去重超时', '重复崩溃', '重复超时']
       },
     }
   },
@@ -75,6 +75,15 @@ export default {
     },
     lateTotal: function () {
       return this.CenterCmpData[1].value + this.CenterCmpData[3].value
+    }
+  },
+  watch: {
+    CenterCmpData: {
+      deep: true,
+      handler(newVal) {
+        console.log(newVal)
+        this.config = { ...this.config }
+      }
     }
   }
 }

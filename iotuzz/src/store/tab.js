@@ -40,6 +40,7 @@ export default {
     },
     clearMenu(state) {
       state.menu = [];
+      state.tabsList = [];
       Cookies.remove("menu");
     },
     addMenu(state, router) {

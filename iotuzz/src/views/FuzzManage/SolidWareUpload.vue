@@ -47,7 +47,7 @@
         <div class="drawer-content-body">
           <el-form :model="peripheralsForm">
             <el-form-item v-for="item in peripheralsLabel" :key="item.label" :label="item.label" label-width="100px">
-              <el-select v-model="peripheralsForm[item.label]" placeholder="改变推荐模型">
+              <el-select v-model="peripheralsForm[item.label]" @change="$forceUpdate()">
                 <el-option v-for="(item, index) in testTypeOptions" :key="index" :label="item.label" :value="item.label"
                   :disabled="item.disabled"></el-option>
               </el-select>
@@ -129,48 +129,18 @@ export default {
           trigger: 'change'
         }],
       },
-      peripheralsForm: {
-        'SPU': "p²im",
-        'U2C': "μEmu",
-        'UART': "p²im",
-        'PWM': "p²im",
-        'DAC': "μEmu",
-        'GPIO': "fuzzware",
-        'DMA': "hal-fuzz",
-      },
-      peripheralsLabel: [
-        {
-          label: 'SPU',
-        },
-        {
-          label: 'U2C',
-        },
-        {
-          label: 'UART',
-        },
-        {
-          label: 'PWM',
-        },
-        {
-          label: 'DAC',
-        },
-        {
-          label: 'GPIO',
-        },
-        {
-          label: 'DMA',
-        }
-      ],
+      peripheralsForm: {},
+      peripheralsLabel: [],
       firmwareFiles: [],
       limit: 1,
       testTypeOptions: [{
-        "label": "fuzzware",
+        "label": "Fuzzware",
       }, {
         "label": "μEmu",
       }, {
-        "label": "p²im",
+        "label": "P²im",
       }, {
-        "label": "hal-fuzz",
+        "label": "Hal-Fuzz",
       }],
       searchLabel: [
         {
@@ -223,10 +193,28 @@ export default {
     peripherals(row) {
       this.drawRow = row
       this.loading = true
+      axios({
+        method: 'post',
+        url: '/api/peripheral/',
+        headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token },
+        data: row
+      }).then((res) => {
+        this.peripheralsForm = {}
+        this.peripheralsLabel = []
+        Object.keys(res.data).map(key => {
+          this.peripheralsLabel.push({
+            "label": key
+          })
+
+          this.peripheralsForm[key] = res.data[key]
+        })
+        // console.log(this.peripheralsForm)
+        // console.log(this.peripheralsLabel)
+      })
       setTimeout(() => {
         this.loading = false
         this.isDrawerShow = true
-      }, 1000);
+      }, 1500);
       console.log(row)
     },
     cancelDrawForm() {
@@ -244,18 +232,23 @@ export default {
           this.drawerLoading = true;
           // console.log(this.peripheralsForm)
           // console.log(calc_type(this.peripheralsForm))
-          axios({
-            method: 'patch',
-            url: '/api/firmware/' + this.drawRow.id + '/',
-            data: {
-              test_type: calc_type(this.peripheralsForm)
-            },
-            headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
-          })
+          let tt = calc_type(this.peripheralsForm)
+          console.log(tt)
+          this.drawRow['test_type'] = tt
           setTimeout(() => {
-            this.drawerLoading = false
-            this.isDrawerShow = false
-          }, 400)
+            axios({
+              method: 'patch',
+              url: '/api/firmware/' + this.drawRow.id + '/',
+              data: this.drawRow,
+              headers: { 'Authorization': 'Bearer ' + this.$store.state.user.token }
+            })
+              .then(() => {
+                setTimeout(() => {
+                  this.drawerLoading = false
+                  this.isDrawerShow = false
+                }, 400)
+              })
+          }, 3000)
         })
     },
     testFirmWare(row) {
@@ -264,7 +257,6 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        // console.log(row)
         axios({
           method: 'post',
           url: '/api/firmware/call/',
@@ -280,6 +272,8 @@ export default {
             }
             this.$store.commit("clearTestState")
             this.$store.commit("setTestState", testState);
+            console.log(this.$store.state.test.test_type)
+            console.log(this.$store.state.test.isTesting)
             this.$router.push('/FuzzManage/Monitor')
           })
       }).catch(() => {
@@ -324,7 +318,6 @@ export default {
       this.formData = {
         name: '',
         duty: '',
-        test_type: '',
       }
     },
     editSolidWare(row) {

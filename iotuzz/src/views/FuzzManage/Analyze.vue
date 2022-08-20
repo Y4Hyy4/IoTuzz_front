@@ -1,14 +1,46 @@
 <template>
   <div class="Analyze">
     <div class="crash-table">
-      <el-table :data="tableData" style="width:100%; font-size: 18px" height="95%">
-        <el-table-column prop="id" label="崩溃编号" fixed="left" width="220" align="center">
+      <div style="height: 10%; padding-top: 5px;">
+        <el-divider content-position="left">
+          <span style="font-size: 28px; color: dodgerblue;">统计数据</span>
+        </el-divider>
+      </div>
+      <el-table :data="stateData" style="width:100%; font-size:18px" height="15%">
+        <el-table-column prop="timeTotal" label="总运行时间" fixed="left" width="240" align="center">
         </el-table-column>
-        <el-table-column prop="name" label="崩溃路径文件" width="180" align="center">
+        <el-table-column prop="xCrash" label="崩溃数" fixed="left" min-width="50" align="center">
         </el-table-column>
-        <el-table-column label="操作" min-width="250px" fixed="right" align="center">
+        <el-table-column prop="xLate" label="超时数" fixed="left" min-width="50" align="center">
+        </el-table-column>
+        <el-table-column prop="xLate" label="路径数" fixed="left" min-width="50" align="center">
+        </el-table-column>
+        <el-table-column label="覆盖率文件" min-width="200px" fixed="right" align="center">
+          <template>
+            <el-button size="mini" @click="downloadState()" type="primary">下载</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div style="height: 20%; padding-top: 50px;">
+        <el-divider content-position="left">
+          <span style="font-size: 28px; color: dodgerblue">漏洞测试分析</span>
+        </el-divider>
+      </div>
+
+      <el-table :data="tableData" style="width:100%; font-size: 18px" height="70%">
+        <el-table-column prop="id" label="编号" fixed="left" width="120" align="center">
+        </el-table-column>
+        <el-table-column prop="type" label="类型" fixed="left" width="120" align="center">
+        </el-table-column>
+        <el-table-column prop="name" label="名称" min-width="60" align="center">
+        </el-table-column>
+
+        <el-table-column prop="vulnerableFile" label="漏洞触发文件" width="180" align="center">
+        </el-table-column>
+        <el-table-column label="下载漏洞触发文件分析" min-width="200px" fixed="right" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="getTestResult(scope.row)" type="primary">下载</el-button>
+            <el-button size="mini" @click="downloadCrash(scope.row)" type="primary">下载</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -29,21 +61,26 @@ export default {
   },
   data() {
     return {
-      tableData: [],
-      tableLabel: [
+      stateData: [
         {
-          prop: 'id',
-          label: '崩溃编号',
+          timeTotal: 0,
+          xCrash: 0,
+          xLate: 0,
+        }
+      ],
+      tableData: [
+        {
+          id: 1,
+          type: "crash",
+          name: "crash001",
+          vulnerableFile: '/xx/xx/xx/xx',
         },
         {
-          prop: 'name',
-          label: '崩溃名称',
-        },
-        // {
-        //   prop: 'typeLabel',
-        //   label: '测试方法',
-        //   width: 200,
-        // },
+          id: 2,
+          type: "hang",
+          name: "hang001",
+          vulnerableFile: '/xx/xx/xx/xx',
+        }
       ],
       config: {
         page: 1,
@@ -52,6 +89,28 @@ export default {
     }
   },
   methods: {
+    getStateResult() {
+      axios({
+        method: 'post',
+        url: '/api/testinfo/',
+        data: {
+          'test_type': this.$store.state.test.test_type,
+          'file_path': this.$store.state.test.file_path
+        },
+      })
+        .then(res => {
+          let newData = res.data
+          // console.log(newData)
+          this.$set(this.stateData[0], 'timeTotal', newData.timeTotal)
+          this.$set(this.stateData[0],'xCrash', newData.xCrash)
+          this.$set(this.stateData[0],'xLate', newData.xLate)
+
+          // this.stateData[0].timeTotal = newData.timeTotal
+          // this.stateData[0].xCrash = newData.xCrash
+          // this.stateData[0].xLate = newData.xLate
+          // console.log(this.CenterCmpData)
+        })
+    },
     getTestResult(row) {
       axios({
         method: 'post',
@@ -67,7 +126,7 @@ export default {
           }
           this.$store.commit("clearTestState")
           this.$store.commit("setTestState", testState);
-          console.log(this.$store.state.test) 
+          console.log(this.$store.state.test)
           this.$router.push('/FuzzManage/Monitor')
         })
     },
@@ -86,8 +145,25 @@ export default {
           this.tableData = res.data.crash
         })
     },
+    downloadState() {
+      const anchor = document.createElement("a");
+      anchor.href = `${process.env.BASE_URL}static/coverage/coverage.txt`;
+      anchor.setAttribute("download", 'coverage.txt');
+      anchor.innerHTML = "downloading...";
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      setTimeout(() => {
+        anchor.click();
+        document.body.removeChild(anchor);
+        setTimeout(() => { self.URL.revokeObjectURL(anchor.href); }, 250);
+      }, 66);
+    },
+    downloadCrash(row) {
+      console.log(row)
+    },
   },
   created() {
+    this.getStateResult()
     this.getList()
   }
 }
